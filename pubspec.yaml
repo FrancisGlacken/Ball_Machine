@@ -52,5 +52,6 @@ flutter:
    - assets/images/blue_ball.png
    - assets/images/orange_ball.png
    - assets/images/green_ball.png
+   - assets/images/quit_game.png
 
   

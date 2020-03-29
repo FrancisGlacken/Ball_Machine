@@ -6,7 +6,6 @@ import 'package:flame/box2d/box2d_component.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flame/flame.dart';
 import 'package:ball_machine/utils.dart';
 
 class Ball2D extends BodyComponent {
@@ -18,9 +17,7 @@ class Ball2D extends BodyComponent {
 
   ImagesLoader images = new ImagesLoader(); 
 
-  Ball2D(box2d, double x, double y) : super(box2d) {
-    posX = x; 
-    posY = y; 
+  Ball2D(box2d, this.posX, this.posY) : super(box2d) {
     _loadImages();
     _createBody();
     random = rng.nextInt(4); 
@@ -89,15 +86,26 @@ class Ball2D extends BodyComponent {
     this.body = world.createBody(bodyDef)..createFixtureFromFixtureDef(fixtureDef);
   }
 
-  
-
-  // void impulse(Offset velocity) {
-  //   Vector2 force = new Vector2(velocity.dx, -velocity.dy)..scale(100.0);
-  //   body.applyLinearImpulse(force, center, true);
-  // }
-
   // void input(Offset position) {
   //   Vector2 force = position.dx < 250 ? new Vector2(-1.0, 0.0) : new Vector2(1.0, 0.0);
   //   body.applyForce(force..scale(10000.0), center); 
   // }
+
+  void handleDragUpdate(DragUpdateDetails details) {
+    impulse(details.delta);
+  }
+
+  void handleDragEnd(DragEndDetails details) {
+    impulse(details.velocity.pixelsPerSecond); 
+  }
+
+  void impulse(Offset velocity) {
+    Vector2 force = new Vector2(velocity.dx, -velocity.dy)..scale(100.0);
+    body.applyLinearImpulse(force, center, true);
+  }
+
+  void stop() {
+    body.linearVelocity = new Vector2(0.0, 0.0);
+    body.angularVelocity = 0.0;
+  }
 }

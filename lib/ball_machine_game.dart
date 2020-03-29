@@ -6,13 +6,11 @@ import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/material.dart';
 import 'components/background.dart';
-import 'components/ball.dart';
 
 
-class BallMachineGame extends BaseGame with TapDetector {
+class BallMachineGame extends BaseGame with TapDetector, PanDetector {
   final GameUIState uiState; 
   Background bg; 
-  Ball ball; 
   final BallWorld world = BallWorld(); 
 
   BallMachineGame(Size size, this.uiState) {
@@ -42,8 +40,18 @@ class BallMachineGame extends BaseGame with TapDetector {
     world.resize(size);
   }
 
-  void onTapDown(TapDownDetails d) {
-
+  @override
+  void onTapUp(TapUpDetails details) {
+    world.handleTap(details.globalPosition);
   }
-  
+
+  @override
+  void onPanUpdate(DragUpdateDetails details) {
+    world.handleDragUpdate(details);
+  }
+
+  @override
+  void onPanEnd(DragEndDetails details) {
+    world.handleDragEnd(details);
+  }
 }
